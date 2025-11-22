@@ -17,14 +17,14 @@ import React, { useMemo, useState } from "react";
  *    email="contact@cabinet.ma"
  *    lat={33.8938}
  *    lng={-5.5473}
- *    onViewSchedule={() => {/* navigate to /planning (example) */}}
- *    onReserve={() => {/* navigate to /reservation (example) */}}
- *  />
- *
- * NOTE: The example above keeps block comments inside arrow functions short and avoids any
- *       closing sequence that could terminate this JSDoc. If your tooling still complains,
- *       just replace the inner comments with strings like "// navigate".
- */
+ *    onViewSchedule={() => {/* navigate to /planning (example) *
+ *    onReserve={() => {/* navigate to /reservation (example) /
+//  *  />
+//  *
+//  * NOTE: The example above keeps block comments inside arrow functions short and avoids any
+//  *       closing sequence that could terminate this JSDoc. If your tooling still complains,
+//  *       just replace the inner comments with strings like "// navigate".
+//  */
 
 // ---- Types ---------------------------------------------------------------
 // Keep the Props in TS. If your environment is JS‑only, you can remove the
