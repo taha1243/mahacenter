@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import clinicLogo from "./assets/clinic-logo.png";
+import clinicLogo from "./assets/clinic-logo-new.png";
 import ReservationForm from "./components/ReservationForm";
 
 /**
@@ -272,8 +272,19 @@ const ClinicLanding = ({
       <header className="navbar">
         <div className="container">
           <div className="nav-brand">
-            <img src={clinicLogo} alt={clinicName} className="logo" />
-            <span className="clinic-name">{clinicName}</span>
+            <div className="logo-container">
+              <img 
+                src={clinicLogo} 
+                alt="Logo Centre Dentaire"
+                className="logo"
+                fetchPriority="high"
+                loading="eager"
+                decoding="sync"
+                width="880"
+                height="220"
+
+              />
+            </div>
           </div>
           <nav className="nav-menu">
             <a href="#home" className="nav-link">{t.home}</a>
@@ -450,7 +461,6 @@ const ClinicLanding = ({
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
-              <img src={clinicLogo} alt={clinicName} className="footer-logo" />
               <h3>{clinicName}</h3>
               <p>{addressLine1}, {city}</p>
             </div>

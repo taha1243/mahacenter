@@ -4,59 +4,55 @@ import { DemoLanding } from './ClinicLanding';
 import AdminLogin from './components/AdminLogin';
 import AdminPanel from './components/AdminPanel';
 
-// Protected Route Component
-function ProtectedRoute({ children, isAuthenticated }) {
-  return isAuthenticated ? children : <Navigate to="/admin" replace />;
-}
-
 function App() {
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleAdminLogin = (success) => {
-    setIsAdminAuthenticated(success);
+  console.log('🚀 NEW App component rendered - isLoggedIn:', isLoggedIn);
+
+  const handleLogin = (success) => {
+    console.log('🔐 Login callback received, success:', success);
+    if (success) {
+      setIsLoggedIn(true);
+      console.log('✅ User logged in successfully');
+    }
   };
 
-  const handleAdminLogout = () => {
-    setIsAdminAuthenticated(false);
+  const handleLogout = () => {
+    console.log('🚪 Logout callback received');
+    setIsLoggedIn(false);
+    console.log('✅ User logged out successfully');
   };
 
   return (
     <Router>
       <Routes>
-        {/* Main website route */}
+        {/* Public routes */}
         <Route path="/" element={<DemoLanding />} />
         
-        {/* Admin login route */}
+        {/* Admin routes */}
         <Route 
           path="/admin" 
           element={
-            isAdminAuthenticated ? 
-              <Navigate to="/admin/dashboard" replace /> : 
-              <AdminLogin onLogin={handleAdminLogin} />
+            isLoggedIn ? (
+              <Navigate to="/admin/dashboard" replace />
+            ) : (
+              <AdminLogin onLogin={handleLogin} />
+            )
           } 
         />
         
-        {/* Admin dashboard route (protected) */}
         <Route 
           path="/admin/dashboard" 
           element={
-            <ProtectedRoute isAuthenticated={isAdminAuthenticated}>
-              <AdminPanel onLogout={handleAdminLogout} />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Redirect any other /admin/* routes to login if not authenticated */}
-        <Route 
-          path="/admin/*" 
-          element={
-            isAdminAuthenticated ? 
-              <Navigate to="/admin/dashboard" replace /> : 
+            isLoggedIn ? (
+              <AdminPanel onLogout={handleLogout} />
+            ) : (
               <Navigate to="/admin" replace />
+            )
           } 
         />
         
-        {/* Catch all other routes and redirect to home */}
+        {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

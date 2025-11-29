@@ -128,14 +128,17 @@ def get_reservation(reservation_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
 
+class StatusUpdate(BaseModel):
+    status: str
+
 @app.put("/api/reservations/{reservation_id}/status")
-def update_reservation_status(reservation_id: int, status: str):
+def update_reservation_status(reservation_id: int, status_update: StatusUpdate):
     try:
         conn = get_connection()
         cur = conn.cursor()
         cur.execute(
             "UPDATE reservations SET status = ? WHERE id = ?",
-            (status, reservation_id)
+            (status_update.status, reservation_id)
         )
         conn.commit()
         
@@ -146,6 +149,37 @@ def update_reservation_status(reservation_id: int, status: str):
         return {"success": True, "message": "Statut mis à jour"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
+
+@app.delete("/api/reservations/{reservation_id}")
+def delete_reservation(reservation_id: int):
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        
+        # First check if the reservation exists
+        cur.execute("SELECT * FROM reservations WHERE id = ?", (reservation_id,))
+        row = cur.fetchone()
+        
+        if not row:
+            raise HTTPException(status_code=404, detail="Rendez-vous non trouvé")
+        
+        # Delete the reservation
+        cur.execute("DELETE FROM reservations WHERE id = ?", (reservation_id,))
+        conn.commit()
+        
+        if cur.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Rendez-vous non trouvé")
+        
+        conn.close()
+        return {
+            "success": True, 
+            "message": f"Rendez-vous #{reservation_id} supprimé avec succès",
+            "deleted_id": reservation_id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la suppression: {str(e)}")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

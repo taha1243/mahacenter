@@ -23,7 +23,7 @@ export default function ReservationForm({ isVisible, onClose, language = "fr" })
       submit: "Envoyer la demande",
       cancel: "Annuler",
       loading: "Envoi en cours...",
-      success: "Votre demande a été envoyée avec succès! Nous vous contacterons bientôt.",
+      success: "Votre demande de rendez-vous a été envoyée avec succès! Notre équipe vous contactera très prochainement pour confirmer votre rendez-vous.",
       error: "Une erreur est survenue, veuillez réessayer.",
       required: "Ce champ est requis",
     },
@@ -37,7 +37,7 @@ export default function ReservationForm({ isVisible, onClose, language = "fr" })
       submit: "إرسال الطلب",
       cancel: "إلغاء",
       loading: "جاري الإرسال...",
-      success: "تم إرسال طلبكم بنجاح! سنتواصل معكم قريباً.",
+      success: "تم إرسال طلب الموعد بنجاح! سيتواصل معكم فريقنا قريباً لتأكيد الموعد.",
       error: "حدث خطأ، يرجى المحاولة مرة أخرى.",
       required: "هذا الحقل مطلوب",
     },
@@ -99,8 +99,12 @@ export default function ReservationForm({ isVisible, onClose, language = "fr" })
   if (!isVisible) return null;
 
   return (
-    <div className="reservation-modal-overlay">
-      <div className={`reservation-modal ${isRTL ? 'rtl' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="reservation-modal-overlay" style={{
+      animation: 'fadeIn 0.3s ease-out'
+    }}>
+      <div className={`reservation-modal ${isRTL ? 'rtl' : ''}`} dir={isRTL ? 'rtl' : 'ltr'} style={{
+        animation: 'slideIn 0.4s ease-out'
+      }}>
         <div className="modal-header">
           <h2 className="modal-title">{t.title}</h2>
           <button 
@@ -189,14 +193,53 @@ export default function ReservationForm({ isVisible, onClose, language = "fr" })
           </div>
 
           {status === "success" && (
-            <div className="status-message success">
-              <p>✅ {t.success}</p>
+            <div style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#dcfce7',
+              color: '#166534',
+              padding: '30px',
+              borderRadius: '12px',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+              zIndex: 10000,
+              textAlign: 'center',
+              border: '2px solid #16a34a',
+              minWidth: '350px',
+              fontSize: '18px',
+              fontWeight: '500'
+            }}>
+              <div style={{ fontSize: '48px', marginBottom: '15px' }}>🎉</div>
+              <p style={{ margin: '0 0 15px 0', fontSize: '20px', fontWeight: 'bold' }}>
+                Réservation bien mise!
+              </p>
+              <p style={{ margin: '0', fontSize: '16px', lineHeight: '1.5' }}>
+                {t.success}
+              </p>
+              <div style={{
+                marginTop: '20px',
+                padding: '10px',
+                backgroundColor: '#f0fdf4',
+                borderRadius: '8px',
+                fontSize: '14px'
+              }}>
+                ⏱️ Cette fenêtre se fermera automatiquement dans 3 secondes
+              </div>
             </div>
           )}
           
           {status === "error" && (
-            <div className="status-message error">
-              <p>❌ {t.error}</p>
+            <div style={{
+              backgroundColor: '#fee2e2',
+              color: '#dc2626',
+              padding: '20px',
+              borderRadius: '8px',
+              marginTop: '20px',
+              textAlign: 'center',
+              border: '1px solid #fca5a5'
+            }}>
+              <p style={{ margin: '0', fontSize: '16px', fontWeight: '500' }}>❌ {t.error}</p>
             </div>
           )}
         </form>

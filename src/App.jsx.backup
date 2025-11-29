@@ -1,0 +1,92 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { DemoLanding } from './ClinicLanding';
+import AdminLogin from './components/AdminLogin';
+import AdminPanel from './components/AdminPanel';
+import TestLoginOnly from './TestLoginOnly';
+
+function App() {
+  // FORCE authentication to FALSE - this should NEVER change on load
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Clear any stored authentication state and force false
+    localStorage.clear();
+    sessionStorage.clear();
+    setIsAuthenticated(false); // Force it again
+    console.log('🔍 App mounted - FORCING isAuthenticated to false');
+    console.log('🔍 Environment VITE_API_URL:', import.meta.env.VITE_API_URL);
+    console.log('🔍 All environment variables:', import.meta.env);
+    console.log('🔍 App version timestamp:', Date.now()); // Force cache bust
+  }, []);
+
+  const handleLogin = (success) => {
+    console.log('🔑 Login attempt, success:', success);
+    if (success) {
+      console.log('✅ Setting authentication to TRUE');
+      setIsAuthenticated(true);
+    }
+  };
+
+  const handleLogout = () => {
+    console.log('🚪 Logout - Setting authentication to FALSE');
+    setIsAuthenticated(false);
+    localStorage.clear();
+    sessionStorage.clear();
+  };
+
+  // Debug logging - this will show on EVERY render
+  console.log('🔍 CURRENT RENDER - isAuthenticated:', isAuthenticated);
+  console.log('🔍 CURRENT RENDER - window.location.pathname:', window.location.pathname);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<DemoLanding />} />
+        
+        {/* TEST ROUTE - Should ONLY show login form */}
+        <Route path="/test-login" element={<TestLoginOnly />} />
+        
+        <Route 
+          path="/admin" 
+          element={
+            (() => {
+              console.log('🔍 /admin route - isAuthenticated:', isAuthenticated);
+              console.log('🔍 /admin route - typeof isAuthenticated:', typeof isAuthenticated);
+              console.log('🔍 /admin route - isAuthenticated === false:', isAuthenticated === false);
+              console.log('🔍 /admin route - !isAuthenticated:', !isAuthenticated);
+              
+              if (isAuthenticated === false) {
+                console.log('➡️ FORCED: Showing AdminLogin component');
+                return <AdminLogin onLogin={handleLogin} />;
+              } else {
+                console.log('➡️ FORCED: Redirecting to /admin/dashboard');
+                return <Navigate to="/admin/dashboard" replace />;
+              }
+            })()
+          } 
+        />
+        
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            (() => {
+              console.log('🔍 /admin/dashboard route - isAuthenticated:', isAuthenticated);
+              if (isAuthenticated) {
+                console.log('➡️ Showing AdminPanel component');
+                return <AdminPanel onLogout={handleLogout} />;
+              } else {
+                console.log('➡️ Redirecting to /admin');
+                return <Navigate to="/admin" replace />;
+              }
+            })()
+          } 
+        />
+        
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
