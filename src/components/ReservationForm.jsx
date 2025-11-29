@@ -58,7 +58,8 @@ export default function ReservationForm({ isVisible, onClose, language = "fr" })
     setStatus("loading");
 
     try {
-      const res = await fetch("http://localhost:8000/api/reservations", {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiUrl}/api/reservations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

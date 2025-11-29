@@ -12,7 +12,8 @@ export default function AdminPanel({ onLogout }) {
   const fetchReservations = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8000/api/reservations");
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/reservations`);
       
       if (!response.ok) {
         throw new Error("Erreur lors du chargement des réservations");
@@ -30,7 +31,8 @@ export default function AdminPanel({ onLogout }) {
 
   const updateStatus = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/reservations/${id}/status`, {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/reservations/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

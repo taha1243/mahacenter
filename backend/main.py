@@ -12,7 +12,7 @@ app = FastAPI(title="Centre Dentaire Dr Maha El Marzouki API")
 
 # CORS middleware to allow React frontend to connect
 # Get allowed origins from environment or use defaults
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174").split(",")
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174,https://mahacenter.vercel.app").split(",")
 
 app.add_middleware(
     CORSMiddleware,
