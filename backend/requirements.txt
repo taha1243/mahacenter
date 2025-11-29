@@ -1,0 +1,8 @@
+# FastAPI Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic[email]==2.5.0
+sqlite3
+
+# CORS support
+python-multipart==0.0.6

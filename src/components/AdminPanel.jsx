@@ -1,0 +1,193 @@
+import React, { useState, useEffect } from "react";
+
+export default function AdminPanel({ onLogout }) {
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchReservations();
+  }, []);
+
+  const fetchReservations = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8000/api/reservations");
+      
+      if (!response.ok) {
+        throw new Error("Erreur lors du chargement des réservations");
+      }
+      
+      const data = await response.json();
+      setReservations(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/reservations/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour");
+      }
+
+      // Refresh the list
+      fetchReservations();
+    } catch (err) {
+      alert("Erreur: " + err.message);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Non spécifiée";
+    return new Date(dateString).toLocaleString("fr-FR");
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "confirmed": return "#10b981";
+      case "cancelled": return "#ef4444";
+      case "pending": return "#f59e0b";
+      default: return "#6b7280";
+    }
+  };
+
+  if (loading) return <div className="admin-loading">Chargement...</div>;
+  if (error) return <div className="admin-error">Erreur: {error}</div>;
+
+  return (
+    <div className="admin-panel">
+      <div className="admin-header">
+        <div className="admin-title-section">
+          <h1>Panneau d'Administration</h1>
+          <p>Gestion des rendez-vous - Centre Dentaire Dr Maha El Marzouki</p>
+        </div>
+        <div className="admin-actions">
+          <button onClick={fetchReservations} className="refresh-btn">
+            🔄 Actualiser
+          </button>
+          <button onClick={onLogout} className="logout-btn">
+            🚪 Déconnexion
+          </button>
+        </div>
+      </div>
+
+      <div className="reservations-stats">
+        <div className="stat-card">
+          <h3>Total</h3>
+          <p>{reservations.length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>En attente</h3>
+          <p>{reservations.filter(r => r.status === "pending").length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Confirmés</h3>
+          <p>{reservations.filter(r => r.status === "confirmed").length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Annulés</h3>
+          <p>{reservations.filter(r => r.status === "cancelled").length}</p>
+        </div>
+      </div>
+
+      <div className="reservations-table">
+        {reservations.length === 0 ? (
+          <p className="no-reservations">Aucune réservation trouvée.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Téléphone</th>
+                <th>Email</th>
+                <th>Date souhaitée</th>
+                <th>Message</th>
+                <th>Créé le</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservations.map((reservation) => (
+                <tr key={reservation.id}>
+                  <td>{reservation.id}</td>
+                  <td>{reservation.name}</td>
+                  <td>
+                    <a href={`tel:${reservation.phone}`}>{reservation.phone}</a>
+                  </td>
+                  <td>
+                    {reservation.email ? (
+                      <a href={`mailto:${reservation.email}`}>{reservation.email}</a>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td>{formatDate(reservation.preferred_date)}</td>
+                  <td>{reservation.message || "-"}</td>
+                  <td>{formatDate(reservation.created_at)}</td>
+                  <td>
+                    <span 
+                      className="status-badge"
+                      style={{ backgroundColor: getStatusColor(reservation.status) }}
+                    >
+                      {reservation.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-buttons">
+                      {reservation.status === "pending" && (
+                        <>
+                          <button
+                            onClick={() => updateStatus(reservation.id, "confirmed")}
+                            className="btn-confirm"
+                          >
+                            ✓ Confirmer
+                          </button>
+                          <button
+                            onClick={() => updateStatus(reservation.id, "cancelled")}
+                            className="btn-cancel-res"
+                          >
+                            ✗ Annuler
+                          </button>
+                        </>
+                      )}
+                      {reservation.status === "confirmed" && (
+                        <button
+                          onClick={() => updateStatus(reservation.id, "cancelled")}
+                          className="btn-cancel-res"
+                        >
+                          ✗ Annuler
+                        </button>
+                      )}
+                      {reservation.status === "cancelled" && (
+                        <button
+                          onClick={() => updateStatus(reservation.id, "pending")}
+                          className="btn-pending"
+                        >
+                          ↻ Réactiver
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}

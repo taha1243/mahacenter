@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Centre Dentaire Dr Maha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1e40af;
+            text-align: center;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #1e40af;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 12px;
+        }
+        .status.pending { background: #f59e0b; }
+        .status.confirmed { background: #10b981; }
+        .status.cancelled { background: #ef4444; }
+        button {
+            margin: 2px;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-confirm { background: #10b981; color: white; }
+        .btn-cancel { background: #ef4444; color: white; }
+        .btn-refresh { background: #1e40af; color: white; padding: 10px 20px; margin-bottom: 20px; }
+        .loading { text-align: center; padding: 40px; }
+        .error { color: #ef4444; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦷 Admin Panel - Centre Dentaire Dr Maha</h1>
+        
+        <button class="btn-refresh" onclick="loadReservations()">🔄 Actualiser</button>
+        
+        <div class="stats">
+            <div class="stat">
+                <h3>Total</h3>
+                <div id="total-count">-</div>
+            </div>
+            <div class="stat">
+                <h3>En attente</h3>
+                <div id="pending-count">-</div>
+            </div>
+            <div class="stat">
+                <h3>Confirmés</h3>
+                <div id="confirmed-count">-</div>
+            </div>
+            <div class="stat">
+                <h3>Annulés</h3>
+                <div id="cancelled-count">-</div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">Chargement...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <table id="reservations-table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Email</th>
+                    <th>Date préférée</th>
+                    <th>Message</th>
+                    <th>Créé le</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="reservations-body">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        async function loadReservations() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const table = document.getElementById('reservations-table');
+            
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            table.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/reservations`);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                
+                const reservations = await response.json();
+                
+                updateStats(reservations);
+                displayReservations(reservations);
+                
+                loading.style.display = 'none';
+                table.style.display = 'table';
+                
+            } catch (err) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent = `Erreur: ${err.message}. Vérifiez que le backend est démarré sur le port 8000.`;
+            }
+        }
+
+        function updateStats(reservations) {
+            const total = reservations.length;
+            const pending = reservations.filter(r => r.status === 'pending').length;
+            const confirmed = reservations.filter(r => r.status === 'confirmed').length;
+            const cancelled = reservations.filter(r => r.status === 'cancelled').length;
+
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('pending-count').textContent = pending;
+            document.getElementById('confirmed-count').textContent = confirmed;
+            document.getElementById('cancelled-count').textContent = cancelled;
+        }
+
+        function displayReservations(reservations) {
+            const tbody = document.getElementById('reservations-body');
+            tbody.innerHTML = '';
+
+            reservations.forEach(reservation => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservation.id}</td>
+                    <td>${reservation.name}</td>
+                    <td><a href="tel:${reservation.phone}">${reservation.phone}</a></td>
+                    <td>${reservation.email || '-'}</td>
+                    <td>${formatDate(reservation.preferred_date)}</td>
+                    <td>${reservation.message || '-'}</td>
+                    <td>${formatDate(reservation.created_at)}</td>
+                    <td><span class="status ${reservation.status}">${reservation.status}</span></td>
+                    <td>${getActionButtons(reservation)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Non spécifiée';
+            return new Date(dateString).toLocaleString('fr-FR');
+        }
+
+        function getActionButtons(reservation) {
+            if (reservation.status === 'pending') {
+                return `
+                    <button class="btn-confirm" onclick="updateStatus(${reservation.id}, 'confirmed')">✓ Confirmer</button>
+                    <button class="btn-cancel" onclick="updateStatus(${reservation.id}, 'cancelled')">✗ Annuler</button>
+                `;
+            } else if (reservation.status === 'confirmed') {
+                return `<button class="btn-cancel" onclick="updateStatus(${reservation.id}, 'cancelled')">✗ Annuler</button>`;
+            } else {
+                return `<button class="btn-confirm" onclick="updateStatus(${reservation.id}, 'pending')">↻ Réactiver</button>`;
+            }
+        }
+
+        async function updateStatus(id, newStatus) {
+            try {
+                const response = await fetch(`${API_BASE}/api/reservations/${id}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la mise à jour');
+                }
+
+                loadReservations(); // Refresh the list
+            } catch (err) {
+                alert(`Erreur: ${err.message}`);
+            }
+        }
+
+        // Load reservations when page loads
+        loadReservations();
+    </script>
+</body>
+</html>
