@@ -62,7 +62,7 @@ export default function AdminLogin({ onLogin }) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="admin"
+              placeholder="Entrez votre nom d'utilisateur"
               required
               style={{
                 width: '100%',
@@ -82,7 +82,7 @@ export default function AdminLogin({ onLogin }) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="admin"
+              placeholder="Entrez votre mot de passe"
               required
               style={{
                 width: '100%',
