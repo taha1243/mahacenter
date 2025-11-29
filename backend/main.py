@@ -24,7 +24,9 @@ app.add_middleware(
 
 # ---------- DB INIT ----------
 def get_connection():
-    conn = sqlite3.connect("reservations.db")
+    # Use environment variable for database path, default to local file
+    db_path = os.getenv('DATABASE_PATH', 'reservations.db')
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
