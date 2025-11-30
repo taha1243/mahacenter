@@ -12,7 +12,7 @@ import ReservationForm from "./components/ReservationForm";
 
 const ClinicLanding = ({
   clinicName = "Centre Dentaire Dr Maha El Marzouki",
-  addressLine1 = "Avenue Moulay Ismail",
+  addressLine1 = "Avenue Moulay Youssef",
   city = "Meknès",
   phone = "+212 7 08 07 66 64",
   email = "dr.elmarzouki.maha@gmail.com",
@@ -490,7 +490,7 @@ export default ClinicLanding;
 export const DemoLanding = () => (
   <ClinicLanding
     clinicName="Centre Dentaire Dr Maha El Marzouki"
-    addressLine1="Avenue Moulay Ismail"
+    addressLine1="Avenue Moulay Youssef"
     city="Meknès"
     phone="+212 7 08 07 66 64"
     email="dr.elmarzouki.maha@gmail.com"
