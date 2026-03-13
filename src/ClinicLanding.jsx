@@ -53,8 +53,8 @@ const ClinicLanding = ({
   mapZoom = 15,
   doctorName = "Dr. Maha El Marzouki",
   doctorTitle = "Chirurgien-Dentiste",
-  doctorBioFR = "Diplômée de la Faculté de Médecine Dentaire de Rabat, Dr. Maha El Marzouki possède plus de 10 ans d'expérience en dentisterie esthétique et conservatrice. Elle se spécialise dans les traitements orthodontiques et les soins dentaires de haute qualité.",
-  doctorBioAR = "خريجة كلية طب الأسنان بالرباط، الدكتورة مها المرزوقي تتمتع بخبرة تزيد عن 10 سنوات في طب الأسنان التجميلي والمحافظ. متخصصة في العلاجات التقويمية ورعاية الأسنان عالية الجودة.",
+  doctorBioFR = "Diplômée de la Faculté de Médecine Dentaire de Rabat, Dr. Maha El Marzouki se spécialise dans la dentisterie esthétique et conservatrice. Elle offre des soins dentaires de haute qualité dans un environnement chaleureux et rassurant.",
+  doctorBioAR = "خريجة كلية طب الأسنان بالرباط، الدكتورة مها المرزوقي متخصصة في طب الأسنان التجميلي والمحافظ. تقدم رعاية أسنان عالية الجودة في بيئة دافئة ومطمئنة.",
   workingHoursFR = ["Lundi - Vendredi : 9h - 18h", "Samedi : 9h - 13h", "Dimanche : Fermé"],
   workingHoursAR = ["الإثنين - الجمعة : 9:00 - 18:00", "السبت : 9:00 - 13:00", "الأحد : مغلق"],
 }) => {
@@ -576,7 +576,7 @@ export const DemoLanding = () => (
     lng={-5.5441453}
     doctorName="Dr. Maha El Marzouki"
     doctorTitle="Chirurgien-dentiste"
-    doctorBioFR="Diplômée de la Faculté de Médecine Dentaire de Rabat, Dr. Maha El Marzouki possède plus de 10 ans d'expérience en dentisterie esthétique et conservatrice. Elle se spécialise dans les traitements orthodontiques et les soins dentaires de haute qualité."
-    doctorBioAR="خريجة كلية طب الأسنان بالرباط، الدكتورة مها المرزوقي تتمتع بخبرة تزيد عن 10 سنوات في طب الأسنان التجميلي والمحافظ. متخصصة في العلاجات التقويمية ورعاية الأسنان عالية الجودة."
+    doctorBioFR="Diplômée de la Faculté de Médecine Dentaire de Rabat, Dr. Maha El Marzouki se spécialise dans la dentisterie esthétique et conservatrice. Elle offre des soins dentaires de haute qualité dans un environnement chaleureux et rassurant."
+    doctorBioAR="خريجة كلية طب الأسنان بالرباط، الدكتورة مها المرزوقي متخصصة في طب الأسنان التجميلي والمحافظ. تقدم رعاية أسنان عالية الجودة في بيئة دافئة ومطمئنة."
   />
 );
