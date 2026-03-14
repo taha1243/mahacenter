@@ -135,7 +135,7 @@ section[id] { scroll-margin-top: var(--nav-height); }
   flex-shrink: 0;
 }
 .logo {
-  height: 80px;
+  height: 110px;
   width: auto;
   object-fit: contain;
   transition: opacity 0.3s;
