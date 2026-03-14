@@ -484,7 +484,7 @@ const ClinicLanding = ({
                   <div className="info-icon"><PhoneIcon /></div>
                   <div>
                     <h4>{t.phoneLabel}</h4>
-                    <p>{phone}</p>
+                    <p dir="ltr">{phone}</p>
                   </div>
                 </div>
                 <div className="info-card">
@@ -546,7 +546,7 @@ const ClinicLanding = ({
               </div>
               <div className="footer-contact-item">
                 <PhoneIcon />
-                <span>{phone}</span>
+                <span dir="ltr">{phone}</span>
               </div>
               <div className="footer-contact-item">
                 <MailIcon />
