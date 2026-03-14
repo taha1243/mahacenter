@@ -231,9 +231,9 @@ const ClinicLanding = ({
       { name: "Yousra Berhili", text: "Je recommande vivement. Dr Maha est très professionnelle, douce et à l'écoute. Elle prend le temps d'expliquer chaque étape du soin. En plus du cabinet qui est très propre et bien organisé.", rating: 5 },
     ],
     ar: [
-      { name: "سارة العلمي", text: "خدمة ممتازة! الدكتورة مها محترفة جداً ومتفهمة. العيادة حديثة والأجواء مطمئنة للغاية.", rating: 5 },
-      { name: "أحمد البناني", text: "تجربة رائعة. الفريق ودود والرعاية عالية الجودة جداً. أنصح به بشدة.", rating: 5 },
-      { name: "فاطمة الزهراء", text: "علاجات تقويم الأسنان أعطت نتائج ممتازة. عيادة نظيفة وحديثة واستقبال حار.", rating: 5 },
+      { name: "Jaouad Jihane", text: "تجربة رائعة. الطبيبة محترفة جداً، تستمع وتطمئن. تمت العناية بدقة ولطف كبيرين. شعرت بالثقة من البداية حتى النهاية. أنصح بشدة!", rating: 5 },
+      { name: "Rabia Bel", text: "استقبال ممتاز، عمل دقيق ولطف كبير. طبيبة أسنان كفؤة ومطمئنة. أنصح بها دون تردد.", rating: 5 },
+      { name: "Yousra Berhili", text: "أنصح بشدة. الدكتورة مها محترفة جداً، لطيفة ومنتبهة. تأخذ وقتها لشرح كل خطوة من العلاج. علاوة على ذلك، العيادة نظيفة ومنظمة جيداً.", rating: 5 },
     ],
   };
 
